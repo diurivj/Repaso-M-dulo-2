@@ -6,9 +6,9 @@ const userSchema = new Schema({
   username: String,
   email: String,
   photoURL: String,
-  location: [{
+  notitas: [{
     type: Schema.Types.ObjectId,
-    ref: 'Location'
+    ref: 'Notita'
   }]
 }, {
   timestamps: {

@@ -38,8 +38,9 @@ router.post('/login', passport.authenticate('local'), (req, res, next) => {
 })
 
 router.get('/profile', isLogged, (req, res) => {
-  User.findById(req.app.locals.loggedUser._id)
+  User.findById(req.app.locals.loggedUser._id).populate('notitas')
   .then(usuario => {
+    console.log(usuario)
     res.render('profile', usuario) //Lo que le tengo que pasar aquí es un objeto
   })
   .catch(error => console.log(error))

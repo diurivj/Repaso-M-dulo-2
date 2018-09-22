@@ -51,9 +51,11 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Repaso';
 
-const auth  = require('./routes/auth');
-const index = require('./routes/index');
+const auth   = require('./routes/auth');
+const index  = require('./routes/index');
+const notita = require('./routes/notita'); 
 app.use('/', index);
 app.use('/', auth);
+app.use('/', notita);
 
 module.exports = app;
