@@ -1,6 +1,7 @@
-const router   = require('express').Router()
-const User     = require('../models/User')
-const passport = require('passport')
+const router      = require('express').Router()
+const User        = require('../models/User')
+const passport    = require('passport')
+const uploadCloud = require('../helpers/cloudinary')
 
 const isLogged = (req, res, next) => {
   if (req.isAuthenticated()) next()
@@ -49,8 +50,8 @@ router.get('/edit/:id', isLogged, (req, res) => {
     title: 'Edit Profile',
     btnValue: 'Save changes',
     url: '/edit',
-    username: req.user.username,
-    email: req.user.email,
+    username: req.app.locals.loggedUser.username,
+    email: req.app.locals.loggedUser.email,
     password: false,
     id: req.user._id
   }
@@ -62,6 +63,20 @@ router.post('/edit/:id', (req, res, next) => {
   User.findByIdAndUpdate(id, req.body, {new: true})
   .then(user => {
     req.app.locals.loggedUser = user
+    res.redirect('/profile')
+  })
+  .catch(e => next(e))
+})
+
+router.get('/edit_image', isLogged, (req, res) => {
+  res.render('edit_image')
+})
+
+router.post('/edit_image', isLogged, uploadCloud.single('photoURL'), (req, res, next) => {
+  User.findByIdAndUpdate(req.app.locals.loggedUser._id, { photoURL: req.file.url }, { new: true })
+  .then(user => {
+    req.app.locals.loggedUser = user
+    console.log(user)
     res.redirect('/profile')
   })
   .catch(e => next(e))
